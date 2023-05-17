@@ -2,28 +2,35 @@
 
 using System.Text.Json;
 using Newtonsoft.Json.Linq;
+
 string link = "https://pokeapi.co/api/v2/pokemon?offset=20&limit=20";
 
 using (var httpClient = new HttpClient())
 {
     var response = await httpClient.GetAsync(link);
-    
-    if (response.IsSuccessStatusCode)
+    try
     {
-        if (response.Content != null)
+        if (response.IsSuccessStatusCode)
         {
-            var datos = response.Content.ReadAsStringAsync();
-            var json = JObject.Parse(datos.Result);
-            //Console.WriteLine(json["results"][0]["name"]);
-            foreach (var dato in json["results"])
+            if (response.Content != null)
             {
-                Console.WriteLine(dato["name"]);
+                var datos = response.Content.ReadAsStringAsync();
+                var json = JObject.Parse(datos.Result);
+                //Console.WriteLine(json["results"][0]["name"]);
+                foreach (var dato in json["results"])
+                {
+                    Console.WriteLine(dato["name"]);
+                }
             }
         }
-    }
-    else
+        else
+        {
+            Console.WriteLine("no funciono");
+        }
+    }catch(Exception e)
     {
-        Console.WriteLine("no funciono");
+        Console.WriteLine("Ocurrio un error: "e.Message);
     }
+   
 
 }
